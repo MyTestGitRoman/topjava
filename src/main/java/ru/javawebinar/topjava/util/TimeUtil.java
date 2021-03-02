@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 
 public class TimeUtil {
 
+    public static int testField;
+
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm");
 
     public static boolean isBetweenHalfOpen(LocalTime lt, LocalTime startTime, LocalTime endTime) {
