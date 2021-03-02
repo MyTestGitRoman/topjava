@@ -4,9 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.InMemoryMealRepository;
-import ru.javawebinar.topjava.repository.UserMealRepository;
+import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
-import sun.rmi.runtime.Log;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -20,12 +19,12 @@ import java.util.Objects;
 public class MealServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
 
-    private UserMealRepository userMealRepository;
+    private MealRepository mealRepository;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        userMealRepository = new InMemoryMealRepository();
+        mealRepository = new InMemoryMealRepository();
     }
 
     @Override
@@ -37,7 +36,7 @@ public class MealServlet extends HttpServlet {
                 req.getParameter("description"),
                 Integer.valueOf(req.getParameter("calories")));
         LOG.info(meal.isNew() ? "Create {}" : "Update {}", meal);
-        userMealRepository.save(meal);
+        mealRepository.save(meal);
         resp.sendRedirect("meals");
     }
 
@@ -47,19 +46,19 @@ public class MealServlet extends HttpServlet {
         LOG.info("action: " + action);
         if (action == null){
             LOG.info("getAll");
-            LOG.info(userMealRepository.getAll().toString());
+            LOG.info(mealRepository.getAll().toString());
             req.setAttribute("mealList",
-                    MealsUtil.getWithExceeded(userMealRepository.getAll(),2000));
+                    MealsUtil.getWithExceeded(mealRepository.getAll(),2000));
             req.getRequestDispatcher("/meals.jsp").forward(req,resp);
         } else if (action.equals("delete")){
             int id = getId(req);
             LOG.info("delete {}", id);
-            userMealRepository.delete(id);
+            mealRepository.delete(id);
             resp.sendRedirect("meals");
         } else {
             final Meal meal = action.equals("create") ?
                     new Meal(LocalDateTime.now(), "", 1000) :
-                    userMealRepository.get(getId(req));
+                    mealRepository.get(getId(req));
             req.setAttribute("meal", meal);
             req.getRequestDispatcher("mealEdit.jsp").forward(req,resp);
         }
