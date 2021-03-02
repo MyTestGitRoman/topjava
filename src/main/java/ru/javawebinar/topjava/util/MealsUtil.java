@@ -27,7 +27,6 @@ public class MealsUtil {
             new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410)
     );
 
-
     public static List<MealTo> getWithExceeded(Collection<Meal> mealList, int caloriesPerDay){
         return filteredByStreams(mealList,LocalTime.MIN,LocalTime.MAX, caloriesPerDay);
     }
