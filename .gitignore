@@ -6,5 +6,5 @@ log
 logging
 patches
 *.patch
-
+.gitignore
 
